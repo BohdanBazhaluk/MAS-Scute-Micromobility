@@ -1,0 +1,460 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <title>Scute — Micromobilidade Inteligente</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;1,9..40,300&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+  <!-- ══════════ SPLASH SCREEN ══════════ -->
+  <div id="splash">
+    <div class="splash-logo">
+      <svg width="64" height="64" viewBox="0 0 64 64" fill="none">
+        <circle cx="32" cy="32" r="32" fill="#1DBA6A"/>
+        <path d="M20 38 C20 38 24 28 32 28 C40 28 44 20 44 20" stroke="white" stroke-width="3.5" stroke-linecap="round"/>
+        <circle cx="22" cy="42" r="5" stroke="white" stroke-width="3" fill="none"/>
+        <circle cx="42" cy="42" r="5" stroke="white" stroke-width="3" fill="none"/>
+        <path d="M27 42 L37 42" stroke="white" stroke-width="3" stroke-linecap="round"/>
+      </svg>
+      <span>scute</span>
+    </div>
+    <p class="splash-tagline">Micromobilidade Inteligente</p>
+  </div>
+
+  <!-- ══════════ APP SHELL ══════════ -->
+  <div id="app" class="hidden">
+
+    <!-- TOP HEADER -->
+    <header id="app-header">
+      <div class="header-left">
+        <div class="avatar">M</div>
+        <div>
+          <p class="header-greeting">Bom dia, Mariana</p>
+          <p class="header-sub">Aveiro, Portugal</p>
+        </div>
+      </div>
+      <div class="header-right">
+        <button class="points-badge" id="points-display">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><polygon points="12,2 15.09,8.26 22,9.27 17,14.14 18.18,21.02 12,17.77 5.82,21.02 7,14.14 2,9.27 8.91,8.26"/></svg>
+          <span id="header-points">256</span>
+        </button>
+        <button class="icon-btn" id="notif-btn">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>
+        </button>
+      </div>
+    </header>
+
+    <!-- ══ VIEWS ══ -->
+
+    <!-- MAP VIEW -->
+    <section id="view-map" class="view active">
+      <!-- Error banners -->
+      <div id="banner-connectivity" class="error-banner hidden">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+        Não foi possível carregar os dados da frota. Verifique a sua ligação e tente novamente.
+      </div>
+      <div id="banner-gps" class="error-banner hidden">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+        Não foi possível detetar a sua localização. Verifique se tem o GPS ativo e tente novamente.
+      </div>
+
+      <!-- Search + Filter Bar -->
+      <div class="map-controls">
+        <div class="search-box">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+          <input type="text" placeholder="Pesquisar localização..." id="map-search" readonly />
+        </div>
+        <button class="filter-btn" id="filter-toggle-btn">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"/></svg>
+          Filtros
+        </button>
+      </div>
+
+      <!-- Filter Panel -->
+      <div id="filter-panel" class="filter-panel hidden">
+        <div class="filter-header">
+          <span>Filtrar Veículos</span>
+          <button id="filter-close-btn">✕</button>
+        </div>
+        <div class="filter-group">
+          <label>Tipo de Veículo</label>
+          <div class="filter-chips" id="type-filters">
+            <button class="chip active" data-type="all">Todos</button>
+            <button class="chip" data-type="Trotinete elétrica">Trotinete</button>
+            <button class="chip" data-type="E-Bike">E-Bike</button>
+            <button class="chip" data-type="Bicicleta">Bicicleta</button>
+          </div>
+        </div>
+        <div class="filter-group">
+          <label>Nível de Bateria</label>
+          <div class="filter-chips" id="battery-filters">
+            <button class="chip active" data-battery="0">Todos</button>
+            <button class="chip" data-battery="25">+25% Bateria</button>
+            <button class="chip" data-battery="50">+50% Bateria</button>
+            <button class="chip" data-battery="75">+75% Bateria</button>
+            <button class="chip" data-battery="100">100% Bateria</button>
+          </div>
+        </div>
+        <div class="filter-actions">
+          <button class="btn-secondary" id="filter-reset">Limpar</button>
+          <button class="btn-primary" id="filter-apply">Aplicar</button>
+        </div>
+        <!-- Error toggles -->
+        <div class="debug-row">
+          <span>Simular Erro Conectividade</span>
+          <label class="toggle-sw"><input type="checkbox" id="sim-connectivity"><span class="slider"></span></label>
+        </div>
+        <div class="debug-row">
+          <span>Simular Erro GPS</span>
+          <label class="toggle-sw"><input type="checkbox" id="sim-gps"><span class="slider"></span></label>
+        </div>
+      </div>
+
+      <!-- Map Grid -->
+      <div class="map-container" id="map-container">
+        <div class="map-grid" id="map-grid">
+          <!-- Generated by JS -->
+        </div>
+        <div id="no-results" class="no-results hidden">
+          <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/><path d="M8 11h6"/></svg>
+          <p>Nenhum veículo encontrado para os filtros aplicados</p>
+        </div>
+        <div class="map-user-dot" title="A sua localização"></div>
+      </div>
+    </section>
+
+    <!-- HISTORY VIEW -->
+    <section id="view-history" class="view">
+      <div class="view-title">
+        <h2>Histórico</h2>
+        <span id="trip-count-badge" class="count-badge">0</span>
+      </div>
+      <div id="history-list" class="history-list">
+        <!-- Generated by JS -->
+      </div>
+      <div id="history-empty" class="empty-state hidden">
+        <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+        <p>Nenhuma viagem registada ainda.</p>
+        <span>As suas viagens irão aparecer aqui.</span>
+      </div>
+    </section>
+
+    <!-- GAMIFICATION VIEW -->
+    <section id="view-gamification" class="view">
+      <div class="view-title">
+        <h2>Perfil & Recompensas</h2>
+      </div>
+      <!-- Points Card -->
+      <div class="points-card">
+        <div class="points-card-bg"></div>
+        <div class="points-card-content">
+          <p class="points-label">Os seus pontos</p>
+          <div class="points-value">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor"><polygon points="12,2 15.09,8.26 22,9.27 17,14.14 18.18,21.02 12,17.77 5.82,21.02 7,14.14 2,9.27 8.91,8.26"/></svg>
+            <span id="profile-points">256</span>
+          </div>
+          <p class="points-hint">Use pontos para desbloquear recompensas</p>
+        </div>
+      </div>
+
+      <!-- Leaderboard -->
+      <div class="section-card">
+        <h3 class="section-title">🏆 Leaderboard Regional</h3>
+        <div id="leaderboard-list"></div>
+      </div>
+
+      <!-- Missions -->
+      <div class="section-card">
+        <h3 class="section-title">⚡ Missões Disponíveis</h3>
+        <div id="missions-list"></div>
+      </div>
+
+      <!-- Marketplace -->
+      <div class="section-card">
+        <h3 class="section-title">🛍️ Marketplace</h3>
+        <div class="marketplace-grid" id="marketplace-grid"></div>
+      </div>
+    </section>
+
+    <!-- ADMIN VIEW -->
+    <section id="view-admin" class="view">
+      <div class="view-title">
+        <h2>Dashboard Admin</h2>
+        <span class="live-badge">LIVE</span>
+      </div>
+
+      <!-- Stats Grid -->
+      <div class="stats-grid">
+        <div class="stat-card accent">
+          <p class="stat-value" id="stat-active-users">47</p>
+          <p class="stat-label">Utilizadores Ativos</p>
+        </div>
+        <div class="stat-card">
+          <p class="stat-value" id="stat-fleet">12</p>
+          <p class="stat-label">Frota Disponível</p>
+        </div>
+        <div class="stat-card">
+          <p class="stat-value" id="stat-in-use">3</p>
+          <p class="stat-label">Em Utilização</p>
+        </div>
+        <div class="stat-card warn">
+          <p class="stat-value" id="stat-maintenance">2</p>
+          <p class="stat-label">Manutenção</p>
+        </div>
+      </div>
+
+      <!-- Subscription Chart -->
+      <div class="section-card">
+        <h3 class="section-title">Subscrições Ativas</h3>
+        <div class="chart-bar-container">
+          <div class="chart-bar-group">
+            <div class="chart-bar" style="height:60%" data-label="Jan"></div>
+            <span>Jan</span>
+          </div>
+          <div class="chart-bar-group">
+            <div class="chart-bar" style="height:75%" data-label="Fev"></div>
+            <span>Fev</span>
+          </div>
+          <div class="chart-bar-group">
+            <div class="chart-bar" style="height:50%" data-label="Mar"></div>
+            <span>Mar</span>
+          </div>
+          <div class="chart-bar-group">
+            <div class="chart-bar" style="height:90%" data-label="Abr"></div>
+            <span>Abr</span>
+          </div>
+          <div class="chart-bar-group">
+            <div class="chart-bar active" style="height:100%" data-label="Mai"></div>
+            <span>Mai</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Partner Area -->
+      <div class="section-card">
+        <h3 class="section-title">Área de Parceiros</h3>
+        <div class="partner-stat"><span>Cupões Distribuídos</span><strong>1,234</strong></div>
+        <div class="partner-stat"><span>Taxa de Utilização</span><strong>68%</strong></div>
+        <div class="partner-stat"><span>Receita Gerada</span><strong>€4,820</strong></div>
+        <button class="btn-primary export-btn" id="export-btn">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+          Exportar Relatório
+        </button>
+      </div>
+
+      <!-- Fleet Management -->
+      <div class="section-card">
+        <h3 class="section-title">Gestão da Frota</h3>
+        <div id="fleet-table"></div>
+      </div>
+    </section>
+
+    <!-- ══ BOTTOM NAV ══ -->
+    <nav id="bottom-nav">
+      <button class="nav-item active" data-view="map">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="3 6 9 3 15 6 21 3 21 18 15 21 9 18 3 21"/><line x1="9" y1="3" x2="9" y2="18"/><line x1="15" y1="6" x2="15" y2="21"/></svg>
+        <span>Mapa</span>
+      </button>
+      <button class="nav-item" data-view="history">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+        <span>Histórico</span>
+      </button>
+      <button class="nav-item" data-view="gamification">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor" stroke="none"><polygon points="12,2 15.09,8.26 22,9.27 17,14.14 18.18,21.02 12,17.77 5.82,21.02 7,14.14 2,9.27 8.91,8.26" opacity="0.9"/></svg>
+        <span>Perfil</span>
+      </button>
+      <button class="nav-item" data-view="admin">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
+        <span>Admin</span>
+      </button>
+    </nav>
+
+  </div><!-- /app -->
+
+  <!-- ══════════ OVERLAYS ══════════ -->
+
+  <!-- Vehicle Profile Panel -->
+  <div id="vehicle-panel" class="bottom-sheet hidden">
+    <div class="sheet-handle"></div>
+    <div class="vehicle-panel-content">
+      <div class="vehicle-header">
+        <div class="vehicle-icon-wrap" id="vp-icon"></div>
+        <div class="vehicle-info">
+          <h3 id="vp-type">Trotinete elétrica</h3>
+          <p id="vp-id" class="vehicle-id">#SC-001</p>
+        </div>
+        <button class="close-sheet" id="vp-close">✕</button>
+      </div>
+      <div class="vehicle-stats">
+        <div class="vstats">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="7" width="18" height="11" rx="2"/><path d="M22 11v4"/><rect x="5" y="10" width="8" height="5" rx="1" fill="currentColor" stroke="none" id="vp-battery-fill"/></svg>
+          <div>
+            <p class="vstat-value" id="vp-battery">85%</p>
+            <p class="vstat-label">Bateria</p>
+          </div>
+        </div>
+        <div class="vstats">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 8v4l3 3"/></svg>
+          <div>
+            <p class="vstat-value" id="vp-distance">320m</p>
+            <p class="vstat-label">Distância</p>
+          </div>
+        </div>
+        <div class="vstats">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 2v4M12 18v4M4.93 4.93l2.83 2.83M16.24 16.24l2.83 2.83"/></svg>
+          <div>
+            <p class="vstat-value" id="vp-status-text">Disponível</p>
+            <p class="vstat-label">Estado</p>
+          </div>
+        </div>
+      </div>
+      <div id="vp-actions" class="vp-actions">
+        <button class="btn-secondary" id="vp-report-btn">Reportar Problema</button>
+        <button class="btn-primary btn-start" id="vp-start-btn">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><polygon points="5,3 19,12 5,21"/></svg>
+          Iniciar Viagem
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- QR Scanner Overlay -->
+  <div id="qr-overlay" class="fullscreen-overlay hidden">
+    <div class="qr-header">
+      <button id="qr-close" class="back-btn">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 12H5M12 5l-7 7 7 7"/></svg>
+      </button>
+      <h3>Escanear QR Code</h3>
+      <div></div>
+    </div>
+    <div class="qr-body">
+      <p class="qr-hint">Aponte a câmara para o código QR no veículo</p>
+      <div class="qr-scanner-frame" id="qr-frame">
+        <div class="qr-corner tl"></div>
+        <div class="qr-corner tr"></div>
+        <div class="qr-corner bl"></div>
+        <div class="qr-corner br"></div>
+        <div class="qr-scan-line"></div>
+        <div class="qr-inner-hint">Toque para simular leitura</div>
+      </div>
+      <div class="qr-manual">
+        <p>Problemas com a leitura?</p>
+        <div class="qr-manual-input">
+          <input type="text" id="qr-manual-code" placeholder="Inserir código manual (ex: SC-001)" />
+          <button id="qr-manual-submit" class="btn-secondary">OK</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Active Trip Overlay -->
+  <div id="trip-overlay" class="fullscreen-overlay hidden">
+    <div class="trip-header">
+      <div class="trip-status-dot"></div>
+      <span>Viagem em curso</span>
+    </div>
+    <div class="trip-body">
+      <div class="trip-vehicle-info">
+        <div id="trip-vehicle-icon" class="trip-vehicle-icon"></div>
+        <p id="trip-vehicle-name">Trotinete #SC-001</p>
+      </div>
+      <div class="trip-timer-wrap">
+        <p class="trip-timer-label">Duração</p>
+        <p class="trip-timer" id="trip-timer">00:00:00</p>
+      </div>
+      <div class="trip-stats-row">
+        <div class="tstat">
+          <p class="tstat-value" id="trip-battery">85%</p>
+          <p class="tstat-label">Bateria</p>
+        </div>
+        <div class="tstat">
+          <p class="tstat-value" id="trip-distance-live">0 km</p>
+          <p class="tstat-label">Distância</p>
+        </div>
+        <div class="tstat">
+          <p class="tstat-value" id="trip-cost">€0.00</p>
+          <p class="tstat-label">Custo</p>
+        </div>
+      </div>
+    </div>
+    <div class="trip-actions">
+      <button class="btn-gamify" id="trip-missions-btn">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><polygon points="12,2 15.09,8.26 22,9.27 17,14.14 18.18,21.02 12,17.77 5.82,21.02 7,14.14 2,9.27 8.91,8.26"/></svg>
+        Ganhe Pontos!
+      </button>
+      <button class="btn-simulate-walk" id="sim-walk-btn">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 18L15 12 9 6"/></svg>
+        Simular Afastamento 25m
+      </button>
+      <button class="btn-stop" id="trip-stop-btn">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><rect x="6" y="6" width="12" height="12" rx="2"/></svg>
+        Terminar Viagem
+      </button>
+    </div>
+  </div>
+
+  <!-- In-Trip Missions Panel -->
+  <div id="missions-panel" class="bottom-sheet hidden">
+    <div class="sheet-handle"></div>
+    <div class="missions-content">
+      <h3>Ajude-nos e ganhe pontos!</h3>
+      <p class="missions-sub">Complete missões durante a sua viagem</p>
+      <div id="missions-in-trip-list"></div>
+    </div>
+  </div>
+
+  <!-- Trip Summary Overlay -->
+  <div id="summary-overlay" class="fullscreen-overlay hidden">
+    <div class="summary-body">
+      <div class="summary-icon">
+        <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+      </div>
+      <h2>Viagem Concluída!</h2>
+      <div class="summary-stats">
+        <div class="sstat"><p class="sstat-val" id="sum-duration">00:02:34</p><p class="sstat-lbl">Duração</p></div>
+        <div class="sstat"><p class="sstat-val" id="sum-distance">1.2 km</p><p class="sstat-lbl">Distância</p></div>
+        <div class="sstat"><p class="sstat-val" id="sum-cost">€0.45</p><p class="sstat-lbl">Custo</p></div>
+      </div>
+      <div class="summary-points">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><polygon points="12,2 15.09,8.26 22,9.27 17,14.14 18.18,21.02 12,17.77 5.82,21.02 7,14.14 2,9.27 8.91,8.26"/></svg>
+        <span>+<span id="sum-points">25</span> pontos ganhos!</span>
+      </div>
+      <button class="btn-primary" id="summary-close-btn">Fechar</button>
+    </div>
+  </div>
+
+  <!-- Report Problem Panel -->
+  <div id="report-panel" class="bottom-sheet hidden">
+    <div class="sheet-handle"></div>
+    <div class="report-content">
+      <h3>Reportar Problema</h3>
+      <p class="report-sub">Veículo: <span id="report-vehicle-id">#SC-001</span></p>
+      <div class="report-categories">
+        <button class="report-cat" data-cat="Travões">🛑 Travões</button>
+        <button class="report-cat" data-cat="Motor">⚙️ Motor</button>
+        <button class="report-cat" data-cat="Rodas">🔧 Rodas</button>
+        <button class="report-cat" data-cat="Outro">❓ Outro</button>
+      </div>
+      <textarea id="report-description" placeholder="Descreva o problema brevemente..." rows="3"></textarea>
+      <div class="report-photo-row">
+        <button class="btn-secondary photo-btn" id="report-photo-btn">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/><circle cx="12" cy="13" r="4"/></svg>
+          Adicionar Foto
+        </button>
+        <span id="report-photo-status" class="photo-status"></span>
+      </div>
+      <button class="btn-primary" id="report-submit-btn">Enviar Relatório</button>
+    </div>
+  </div>
+
+  <!-- Toast -->
+  <div id="toast" class="toast hidden"></div>
+
+  <script src="app.js"></script>
+</body>
+</html>
