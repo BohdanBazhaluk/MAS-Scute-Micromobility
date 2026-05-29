@@ -1,56 +1,235 @@
-# MAS-Scute-Micromobility
-## Claude prompt usado na primeira implementação do projeto
+# 🛴 Scute — Plataforma de Micromobilidade Inteligente
 
-~~~Act as an expert Senior Frontend Developer. Your task is to generate the complete code for the first functional increment of the "Scute" project, a smart and gamified micromobility platform. 
+Projeto desenvolvido no âmbito da unidade curricular **40431 — Modelação e Análise de Sistemas**
+**Grupo 23:** Bohdan Bazhaluk [131776] · Gabriel Sousa [131767] · Guilherme Lourenço [133142]
 
-Following the project's Iteration 5 guidelines, you must deliver a single-page or cleanly separated web application using ONLY the core web stack: HTML5, CSS3, and JavaScript (Vanilla JS). Do NOT use any frameworks (e.g., React, Vue, Angular) or backend languages. The application must look and feel like a native mobile app (mobile-first responsive design) and simulate persistence/state management using `LocalStorage`.
+---
 
-### 1. UX/UI Requirements (Based on Prototype Video & Specs)
-- **Design:** Mobile-first, modern, and clean interface with a green/dark/white color palette mirroring the Scute prototype.
-- **Navigation Bar:** A persistent bottom navigation bar with 4 tabs: 
-  1. Map (Home)
-  2. History (Clock icon)
-  3. Gamification/Profile (Hamburger menu/Star icon)
-  4. Admin/Partner Dashboard
-- **Transitions:** Smooth conditional rendering or tab switching without page reloads.
+## 🚀 Sobre o Projeto
 
-### 2. Core State Data Model (LocalStorage Base)
-Initialize the `LocalStorage` with mockup data if empty:
-- **Vehicles Array:** Unique ID, type (Trotinete elétrica, E-Bike, Bicicleta), battery level (%), distance (m), coordinates/grid position, status ("available", "in_use", "maintenance").
-- **User Profile:** Points balance (start with 256 points), active subscription status (true/false).
-- **Missions Array:** Available rebalancing tasks ("Relocate vehicle to Aveiro center", "Charge Scooter nearby") rewarding +100, +150, or +200 points.
-- **Trips History:** List of past trips (City, Date/Time, Distance, Vehicle type).
+O **Scute** introduz uma plataforma de micromobilidade inteligente que combina o aluguer de veículos elétricos com um modelo gamificado.
 
-### 3. Epic 1: Vehicle Rental Base (User Stories & Scenarios)
-Implement the core flows exactly as defined in the Acceptance Criteria:
+O projeto foi desenvolvido como uma aplicação web sem backend (**HTML, CSS e JavaScript**), recorrendo à API **Mapbox** para visualização do mapa e ao **LocalStorage** para simular a persistência de dados.
 
-#### US1.1 & US1.2: Vehicle Map & Filtering
-- Create a visual interactive map area (you can simulate the map using an elegant grid/canvas layout or mock layout with interactive icons based on the video).
-- Render vehicle pins based on the database. Clicking a pin slides up a **Vehicle Profile Panel** showing: Type, Battery %, Distance, and an "Iniciar Viagem" button.
-- Implement a **Filter Dropdown**: Allow filtering by vehicle type and battery thresholds (e.g., "+75% Bateria"). Include a clear message if no results are found: *"Nenhum veículo encontrado para os filtros aplicados"*.
-- Include error mock toggles/handlers for GPS error and Connectivity error to validate acceptance criteria.
+Este primeiro incremento foca-se principalmente na implementação do **Épico #1 — Aluguer de Veículos**, cobrindo os fluxos de:
 
-#### US1.3: Start Trip (QR Code Simulation)
-- Clicking "Iniciar Viagem" opens a camera scanner overlay view (simulated beautifully in HTML/CSS with a green scanning square targeting the prototype's layout). Clicking inside it simulates a successful read.
-- **Business Rule Validations:**
-  - If battery < 20%, block the trip with: *"Este veículo não tem carga suficiente para realizar uma viagem segura. Por favor escolha outro veículo"*.
-  - If status is "maintenance", block with: *"Este veículo requer manutenção e não está disponível para utilização..."*.
-- On successful unlock: Update vehicle status to "in_use" (hiding it from the map), open a dynamic trip screen showing an active live timer (`00:00:00`), a red "Stop" button, and a Gamification context button.
+* Consulta do mapa de veículos
+* Início de viagem
+* Término de viagem
+* Validação de cenários de erro e bloqueio
 
-#### US1.4: End Trip & Proximity
-- Clicking "Terminar Viagem" (or triggering a "Simulate 25m Walk Away" button) stops the timer, locks the vehicle, updates its status to "available", saves the trip to the History array, and adds it to the list.
+---
 
-### 4. Gamification Layer & Extended Views
-Integrate the elements showcased in the navigation and prototype flow:
-- **Gamification Tab / Profile:** Displays the user's current points balance (e.g., 256 points), a dynamic **Leaderboard** ranking regional users, and a **Marketplace** where points can be used (e.g., "Pedir Veículo" or "Bloquear Veículo").
-- **In-Trip Gamification Context:** While a trip is active, clicking the star icon slides up the "Ajude-nos e ganhe pontos!" panel showing localized mission pins (+100, +150, +200 stars) that incentivize rebalancing.
-- **Report Problem (UC-15):** Users can access a "Reportar Problema" view, select categories (Travões, Motor, Rodas, Outro), write a short description, simulate taking a photo, and click "Enviar", which dynamically marks that specific vehicle's status as "maintenance".
-- **Admin/Partner Dashboard:** A simple toggle layout showcasing the analytics from the prototype video: active user count, fleet counters, subscription charts, and a partner area with coupon distribution metrics and an "Exportar" button.
+## 🌐 Recursos Oficiais
 
-### Output Structure Expected:
-Please output the codebase cleanly:
-1. `index.html` containing the semantic layout and application shells.
-2. `style.css` containing the responsive mobile layout, animations, panels, and polished UI theme.
-3. `app.js` containing the state initialization, LocalStorage bindings, event listeners, filtering algorithms, trip timers, and views management.
+**Versão Online (Deployment)**
+https://bohdanbazhaluk.github.io/scute/
 
-Ensure all code is self-contained, fully written (no placeholders or "code goes here" comments), robust, and ready to be deployed.~~~
+**Repositório GitHub**
+https://github.com/BohdanBazhaluk/scute
+
+**Testes de Aceitação (Automação)**
+https://drive.google.com/drive/folders/13N2IluO2bg_H4fAGbNDWHzvzKRCW9lC_?usp=sharing
+
+---
+
+## 💻 Como Correr Localmente
+
+Não requer instalação de dependências nem backend.
+
+Basta abrir diretamente:
+
+```text
+index.html → abrir com qualquer browser moderno
+(Chrome, Firefox, Safari ou Edge)
+```
+
+Ou servir localmente:
+
+```bash
+npx serve .
+```
+
+---
+
+## 👤 Utilizador de Teste
+
+| Campo           | Valor         |
+| --------------- | ------------- |
+| Nome            | Mariana Silva |
+| Pontos iniciais | 456 pts       |
+| Subscrição      | Ativa         |
+
+> **Nota:**
+> O estado da aplicação é persistido em `LocalStorage`.
+
+Para repor os dados iniciais:
+
+**F12 → Application → Local Storage → apagar entradas com prefixo `scute_`**
+
+---
+
+## 🚲 Veículos Disponíveis (Dados de Demonstração)
+
+| ID     | Tipo               | Bateria | Estado                     |
+| ------ | ------------------ | ------- | -------------------------- |
+| SC-001 | Trotinete elétrica | 88%     | Disponível                 |
+| SC-002 | Trotinete elétrica | 15%     | Disponível (bateria baixa) |
+| SC-003 | E-Bike             | 92%     | Disponível                 |
+| SC-004 | E-Bike             | 67%     | Disponível                 |
+| SC-005 | Bicicleta          | 100%    | Disponível                 |
+| SC-006 | Trotinete elétrica | 55%     | Disponível                 |
+| SC-007 | E-Bike             | 73%     | Manutenção                 |
+| SC-008 | Bicicleta          | 100%    | Disponível                 |
+| SC-009 | Trotinete elétrica | 41%     | Disponível                 |
+| SC-010 | E-Bike             | 80%     | Manutenção                 |
+
+### Casos de teste úteis
+
+**Bloqueio por bateria baixa:**
+`SC-002`
+
+**Bloqueio por manutenção:**
+`SC-007` ou `SC-010`
+
+---
+
+## 🛠️ Fluxo Principal (Épico #1)
+
+### 1. Consultar Mapa
+
+Abrir a aplicação e visualizar os veículos disponíveis.
+
+### 2. Selecionar Veículo
+
+Clicar num marcador no mapa para abrir o painel lateral.
+
+### 3. Iniciar Viagem
+
+Selecionar **"Iniciar Viagem"**.
+
+Abre o scanner QR simulado.
+
+### 4. Inserir Código Manualmente
+
+Exemplo:
+
+```text
+SC-001
+```
+
+A viagem inicia e o temporizador arranca.
+
+### 5. Terminar Viagem
+
+Pode ser terminado por:
+
+* Botão **Terminar Viagem**
+* Botão de debug **Simular Afastamento 25m**
+
+Após isso é apresentado o resumo da viagem.
+
+---
+
+## ⚠️ Limitações do Incremento 1
+
+Por se tratar de um protótipo focado na fase **Construction (OpenUP)**, existem limitações conhecidas:
+
+### Leitura física de QR Code
+
+O scanner é simulado por introdução manual do ID.
+
+Não existe acesso real à câmara.
+
+---
+
+### Dados estáticos
+
+A frota e missões são geradas por dados fixos.
+
+Não existe base de dados externa.
+
+---
+
+### Distância estimada
+
+A distância da viagem é calculada com base no tempo.
+
+Não utiliza GPS real.
+
+---
+
+### Marketplace parcial
+
+Os pontos podem ser consumidos ao selecionar recompensas.
+
+Contudo:
+
+* Não gera cupões reais
+* Não cria missões
+* Não bloqueia veículos
+
+Funciona apenas como placeholder funcional.
+
+---
+
+## 🧪 Testes de Aceitação Automáticos
+
+A validação dos critérios de aceitação foi realizada com **Selenium IDE** (Chrome e Firefox).
+
+### Cenários cobertos
+
+### US1.1 — Consulta do mapa
+
+* Carga com sucesso
+* Erro de conectividade
+* Erro de GPS
+
+### US1.2 — Filtros
+
+* Aplicação de filtros com resultados
+* Aplicação de filtros sem resultados
+
+### US1.3 — Início de viagem
+
+* Início manual
+* Bloqueio por bateria baixa
+* Bloqueio por manutenção
+
+### US1.4 — Fim de viagem
+
+* Término manual
+* Término automático por afastamento de 25 metros
+
+Os ficheiros de teste e vídeo demonstrativo encontram-se na entrega oficial do projeto.
+
+---
+
+## 📁 Estrutura do Repositório
+
+```text
+├── index.html       # Interface principal
+├── style.css        # Estilos (mobile-first, dark/green theme)
+├── app.js           # Lógica da aplicação
+└── README.md        # Documentação principal
+```
+
+---
+
+## 🏗️ Tecnologias Utilizadas
+
+* HTML5
+* CSS3
+* JavaScript (Vanilla)
+* Mapbox API
+* LocalStorage
+* Selenium IDE
+* GitHub Pages
+
+---
+
+## 📌 Estado do Incremento
+
+**Incremento 1 concluído**
+
+Implementação funcional dos casos principais do **Épico #1: Aluguer de Veículos**, com cenários de aceitação validados e deployment disponível publicamente.
